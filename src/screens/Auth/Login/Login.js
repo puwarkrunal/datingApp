@@ -11,7 +11,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {logo} from '../../../assets/images';
 import CButton from '../../../Components/CButton';
 import {useNavigation} from '@react-navigation/native';
-import { useSharedValue } from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -40,7 +40,11 @@ const Login = () => {
               name={'Login With Facebook'}
               iconName={'facebook-square'}
             />
-            <CButton name={'Login With Phone'} iconName={'phone'} />
+            <CButton
+              name={'Login With Phone'}
+              iconName={'phone'}
+              onPress={() => navigation.navigate('LoginWithPhone')}
+            />
           </View>
 
           <View style={{alignSelf: 'center', flexDirection: 'row'}}>

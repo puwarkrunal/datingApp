@@ -1,7 +1,6 @@
 import {
   Text,
   View,
-  Image,
   Modal,
   Animated,
   StyleSheet,
@@ -9,13 +8,11 @@ import {
   PanResponder,
   SafeAreaView,
   TouchableOpacity,
-  StatusBar,
 } from 'react-native';
 import Cards from '../../Components/Cards';
+import Slider from '@react-native-community/slider';
 import React, {useCallback, useRef, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Slider from '@react-native-community/slider';
-import MyStatusBar from '../../Components/MyStatusBar';
 
 const {height, width} = Dimensions.get('window');
 
@@ -64,12 +61,12 @@ const Home = () => {
   const panResponser = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (_, {dx, dy}) => {
-      console.log('dx:' + dx + ' dy:' + dy);
+      // console.log('dx:' + dx + ' dy:' + dy);
       swipe.setValue({x: dx, y: dy});
     },
 
     onPanResponderRelease: (_, {dx, dy}) => {
-      console.log('released:' + 'dx:' + dx + ' dy:' + dy);
+      // console.log('released:' + 'dx:' + dx + ' dy:' + dy);
       let direction = Math.sign(dx);
       console.log(direction, 'direction');
       let isActionActive = Math.abs(dx) > 200;
@@ -233,6 +230,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   card: {},
   header: {

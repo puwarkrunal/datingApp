@@ -1,12 +1,19 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-const CButton = ({name, iconName}) => {
+const CButton = ({name, iconName, otherStyle, txtStyle, onPress}) => {
   return (
-    <TouchableOpacity style={styles.btnContainer} activeOpacity={0.8}>
-      <AntDesign name={iconName} size={20} color={'black'} />
-      <Text style={styles.title}>{name}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.btnContainer, otherStyle]}
+      activeOpacity={0.8}>
+      {iconName ? (
+        <AntDesign name={iconName} size={20} color={'black'} />
+      ) : (
+        <View />
+      )}
+      <Text style={[styles.title, txtStyle]}>{name}</Text>
       <Text></Text>
     </TouchableOpacity>
   );

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "320252908279",
+    "project_id": "mingle-5e65c",
+    "storage_bucket": "mingle-5e65c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320252908279:android:bf8061f0888a6deaeaf9f2",
+        "android_client_info": {
+          "package_name": "com.anim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320252908279-r9h27rlov2mjv1jim7skgcj7uk3mi6o3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anim",
+            "certificate_hash": "34af77b459a7009cc1637a76f324a423332755dd"
+          }
+        },
+        {
+          "client_id": "320252908279-6eu6e72fv2838ad5244pouujiq6u9mum.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYOvqouSkjO0upj-JvgyeVFFVj7ZTNwxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320252908279-6eu6e72fv2838ad5244pouujiq6u9mum.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "320252908279-mk44knt1ev8bm0h2m25ic5704c4he6dn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.anim"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

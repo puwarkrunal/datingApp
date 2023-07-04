@@ -4,7 +4,7 @@ import React from 'react';
 const MyStatusBar = ({backgroundColor, ...props}) => (
   <View style={[styles.statusBar, {backgroundColor}]}>
     <SafeAreaView>
-      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+      <StatusBar translucent backgroundColor={backgroundColor} barStyle={'dark-content'} {...props} />
     </SafeAreaView>
   </View>
 );
