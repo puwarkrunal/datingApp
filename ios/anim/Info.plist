@@ -20,6 +20,12 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need access for image picker</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Need access for image picker</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Need access for image picker</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

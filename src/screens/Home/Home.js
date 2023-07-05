@@ -9,59 +9,36 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 import Cards from '../../Components/Cards';
-import Slider from '@react-native-community/slider';
-import React, {useCallback, useRef, useState} from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import auth from '@react-native-firebase/auth';
-import { useSelector } from 'react-redux';
+import Slider from '@react-native-community/slider';
+import firestore from '@react-native-firebase/firestore';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 const {height, width} = Dimensions.get('window');
 
 const Home = () => {
-  const [filterModal, setFilterModal] = useState(false);
   const [val, setVal] = useState(0);
   const [age, setAge] = useState(0);
-  const [data, setData] = useState([
-    {
-      image:
-        'https://www.istockphoto.com/photo/picturesque-morning-in-plitvice-national-park-colorful-spring-scene-of-green-forest-gm1093110112-293349147',
-      id: 1,
-      title: 'vidish',
-      age: 26,
-      distance: '10 km',
-    },
-    {
-      image:
-        'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1600',
-      id: 2,
-      title: 'gaurav',
-      age: 24,
-      distance: '20 km',
-    },
-    {
-      image:
-        'https://www.istockphoto.com/photo/picturesque-morning-in-plitvice-national-park-colorful-spring-scene-of-green-forest-gm1093110112-293349147',
-      id: 1,
-      title: 'krunal',
-      age: 22,
-      distance: '25 km',
-    },
-    {
-      image:
-        'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg?auto=compress&cs=tinysrgb&w=1600',
-      id: 2,
-      title: 'manan',
-      age: 24,
-      distance: '5 km',
-    },
-  ]);
-
+  const [listUser, setListUser] = useState([]);
+  const [filterModal, setFilterModal] = useState(false);
   const [removedUserData, setRemovedUserData] = useState([]);
-  // console.log(auth().signOut());
 
-  const rdx = useSelector(state => state.user.data)
-  console.log(rdx,"rdx");
+  useEffect(() => {
+    const getAllUsers = async () => {
+      let list = await firestore().collection('users').get();
+      let allUser = [];
+      list.docs.map(item => {
+        allUser.push(item.data());
+      });
+      setListUser(allUser);
+    };
+    getAllUsers();
+  }, []);
+
+  const rdx = useSelector(state => state.user.data);
 
   const swipe = useRef(new Animated.ValueXY()).current;
   const rotate = useRef(new Animated.Value(0)).current;
@@ -95,7 +72,7 @@ const Home = () => {
     direction => {
       let likeStatus =
         direction == 1 ? 'Like' : direction == -1 ? 'Reject' : null;
-      setData(prevState => {
+      setListUser(prevState => {
         const removedUser = prevState[0];
         removedUser.likeStatus = likeStatus;
         setRemovedUserData(prevRemovedUserData => [
@@ -119,7 +96,7 @@ const Home = () => {
         </TouchableOpacity>
       </View>
 
-      {data
+      {listUser
         .map((item, index) => {
           let isFirst = index === 0;
           let dragHandler = isFirst ? panResponser.panHandlers : {};

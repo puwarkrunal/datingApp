@@ -2,8 +2,18 @@ import {View, Text, Image, Dimensions, Animated, Platform} from 'react-native';
 import React, {useCallback, useRef} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import TinderChoice from './TinderChoice';
+import moment from 'moment';
 
 const {height, width} = Dimensions.get('window');
+
+function calculateAge(birthDate) {
+  const today = moment();
+  const birth = moment(birthDate, 'DD-MM-YYYY');
+
+  const age = today.diff(birth, 'years');
+
+  return age;
+}
 
 const Cards = ({item, isFirst, swipe, ...rest}) => {
   const rotate = swipe.x.interpolate({
@@ -88,7 +98,7 @@ const Cards = ({item, isFirst, swipe, ...rest}) => {
             color: '#fff',
             fontSize: 34,
           }}>
-          {item.title}, {item.age}
+          {item.name}, {calculateAge(item.DOB)}
         </Text>
         <Text
           style={{
