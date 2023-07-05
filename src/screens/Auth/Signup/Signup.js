@@ -21,7 +21,7 @@ import firestore from '@react-native-firebase/firestore';
 const Signup = () => {
   const navigation = useNavigation();
   const [name, setName] = useState('');
-  const [Phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [DOB, setDOB] = useState('');
@@ -41,13 +41,13 @@ const Signup = () => {
   const onSignup = async () => {
     const data = {
       name: name,
-      phone: Phone,
       email: email,
+      phone: phone,
       gender: gender,
       DOB: DOB,
     };
-    // await firestore().collection('Users').add(data);
-    navigation.navigate('Otp', {phone: Phone});
+
+    navigation.navigate('Otp', {data: data, screen: 'signup'});
   };
 
   return (
@@ -59,14 +59,14 @@ const Signup = () => {
 
       <View style={styles.inputContainer}>
         <CInput placeholder={'Full Name'} onChangeText={txt => setName(txt)} />
-        <CDropdown options={genderList} onSelect={handleDropdownSelect} />
-        <CDatePicker onSelect={handleSelect} />
         <CInput placeholder={'Email'} onChangeText={txt => setEmail(txt)} />
         <CInput
           placeholder={'Phone'}
-          keyboardType='number-pad'
+          keyboardType="number-pad"
           onChangeText={txt => setPhone(txt)}
         />
+        <CDropdown options={genderList} onSelect={handleDropdownSelect} />
+        <CDatePicker onSelect={handleSelect} />
       </View>
 
       <CButton
@@ -78,7 +78,7 @@ const Signup = () => {
 
       <View style={styles.orDesign}>
         <View style={{borderBottomWidth: 1, width: '40%'}} />
-        <Text>Or</Text>
+        <Text style={{color: 'black'}}>Or</Text>
         <View style={{borderBottomWidth: 1, width: '40%'}} />
       </View>
 
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
   },
   socialImg: {
     resizeMode: 'contain',
-    width: moderateScale(50),
-    height: moderateScale(50),
+    width: moderateScale(45),
+    height: moderateScale(45),
   },
   socialBtn: {
-    margin: moderateScale(6),
+    marginHorizontal: moderateScale(12),
   },
 });

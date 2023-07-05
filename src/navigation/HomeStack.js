@@ -22,8 +22,8 @@ const HomeStack = () => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="LoginWithPhone" component={LoginWithPhone} />
       <Stack.Screen name="Otp" component={OtpScreen} />
-      <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="Tabs" component={BottomTab} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   );
 };

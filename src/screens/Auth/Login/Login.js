@@ -6,17 +6,15 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {logo} from '../../../assets/images';
 import CButton from '../../../Components/CButton';
 import {useNavigation} from '@react-navigation/native';
-import {useSharedValue} from 'react-native-reanimated';
+import auth from '@react-native-firebase/auth';
 
 const Login = () => {
   const navigation = useNavigation();
-  const animationY = useSharedValue(1);
-
   return (
     <SafeAreaView style={{flex: 1}}>
       <LinearGradient

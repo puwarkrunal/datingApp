@@ -5,15 +5,18 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {moderateScale, verticalScale} from '../../../helper';
+import {useDispatch} from 'react-redux';
+import {setUserData} from '../../../redux/slices/UserSlice';
+import firestore from '@react-native-firebase/firestore';
 
 const OtpScreen = () => {
   const route = useRoute();
-  const {phone} = route.params;
+  const {data, screen} = route.params;
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [confirm, setConfirm] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState(`+91 ${phone}`);
-  const [verificationId, setVerificationId] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState(`+91 ${data.phone}`);
 
   const otpInputs = Array.from({length: 6}, () => useRef(null));
   const [otp, setOtp] = useState('');
@@ -34,7 +37,15 @@ const OtpScreen = () => {
   async function confirmCode() {
     try {
       await confirm.confirm(otp);
+
+      if (screen == 'signup') {
+        firestore().collection('users').add(data);
+        dispatch(setUserData(data));
+      } else {
+        dispatch(setUserData(data));
+      }
       console.log('Code Verify successfully');
+      navigation.navigate('Tabs');
     } catch (error) {
       console.log('Invalid code.');
     }
@@ -99,7 +110,7 @@ const OtpScreen = () => {
           name={'CONTINUE'}
           otherStyle={styles.btnStyle}
           txtStyle={{color: 'white'}}
-          onPress={() => navigation.navigate('Tabs')}
+          onPress={() => confirmCode()}
         />
       </View>
     </SafeAreaView>

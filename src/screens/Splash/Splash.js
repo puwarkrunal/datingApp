@@ -8,27 +8,32 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {logo} from '../../assets/images';
+import auth from '@react-native-firebase/auth';
 
 const Splash = () => {
   const navigation = useNavigation();
-  const animation = useSharedValue(0);
-  const animationY = useSharedValue(1);
+  const animation = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          rotate: animationY.value + 'deg',
+          rotate: animation.value + 'deg',
         },
       ],
     };
   });
 
+  function onAuthStateChanged(user) {
+    if (user) {
+      navigation.navigate('Tabs');
+    } else navigation.navigate('Login');
+  }
+
   useEffect(() => {
     const runAnimation = async () => {
-      // animation.value = await withTiming(100, {duration: 500});
-      animationY.value = await withTiming(360, {duration: 2000});
+      animation.value = await withTiming(360, {duration: 2000});
       await new Promise(resolve => setTimeout(resolve, 2000));
-      navigation.navigate('Login');
+      auth().onAuthStateChanged(onAuthStateChanged);
     };
 
     runAnimation();

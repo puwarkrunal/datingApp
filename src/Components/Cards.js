@@ -1,4 +1,4 @@
-import {View, Text, Image, Dimensions, Animated} from 'react-native';
+import {View, Text, Image, Dimensions, Animated, Platform} from 'react-native';
 import React, {useCallback, useRef} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import TinderChoice from './TinderChoice';
@@ -52,7 +52,7 @@ const Cards = ({item, isFirst, swipe, ...rest}) => {
       style={[
         {
           width: width - 20,
-          height: height - 350,
+          height: Platform.OS == 'ios' ? height - 350 : height - 280,
           alignSelf: 'center',
           position: 'absolute',
           top: 100,

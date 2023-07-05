@@ -13,6 +13,8 @@ import Cards from '../../Components/Cards';
 import Slider from '@react-native-community/slider';
 import React, {useCallback, useRef, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import auth from '@react-native-firebase/auth';
+import { useSelector } from 'react-redux';
 
 const {height, width} = Dimensions.get('window');
 
@@ -55,18 +57,21 @@ const Home = () => {
     },
   ]);
 
+  const [removedUserData, setRemovedUserData] = useState([]);
+  // console.log(auth().signOut());
+
+  const rdx = useSelector(state => state.user.data)
+  console.log(rdx,"rdx");
+
   const swipe = useRef(new Animated.ValueXY()).current;
   const rotate = useRef(new Animated.Value(0)).current;
 
   const panResponser = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
     onPanResponderMove: (_, {dx, dy}) => {
-      // console.log('dx:' + dx + ' dy:' + dy);
       swipe.setValue({x: dx, y: dy});
     },
-
     onPanResponderRelease: (_, {dx, dy}) => {
-      // console.log('released:' + 'dx:' + dx + ' dy:' + dy);
       let direction = Math.sign(dx);
       console.log(direction, 'direction');
       let isActionActive = Math.abs(dx) > 200;
@@ -75,7 +80,7 @@ const Home = () => {
           toValue: {x: 500 * dx, y: dy},
           useNativeDriver: true,
           duration: 500,
-        }).start(removeCard);
+        }).start(() => removeCard(direction));
       } else {
         Animated.spring(swipe, {
           toValue: {x: 0, y: 0},
@@ -86,20 +91,22 @@ const Home = () => {
     },
   });
 
-  const removeCard = useCallback(() => {
-    setData(prepState => prepState.slice(1));
-    swipe.setValue({x: 0, y: 0});
-  }, [swipe]);
-
-  const handelSelection = useCallback(
+  const removeCard = useCallback(
     direction => {
-      Animated.timing(swipe, {
-        toValue: {x: direction * 500, y: 0},
-        useNativeDriver: true,
-        duration: 500,
-      }).start(removeCard);
+      let likeStatus =
+        direction == 1 ? 'Like' : direction == -1 ? 'Reject' : null;
+      setData(prevState => {
+        const removedUser = prevState[0];
+        removedUser.likeStatus = likeStatus;
+        setRemovedUserData(prevRemovedUserData => [
+          ...prevRemovedUserData,
+          removedUser,
+        ]);
+        return prevState.slice(1);
+      });
+      swipe.setValue({x: 0, y: 0});
     },
-    [removeCard],
+    [swipe],
   );
 
   return (

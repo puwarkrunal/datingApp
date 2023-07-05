@@ -1,15 +1,20 @@
-import {View, Text} from 'react-native';
 import React from 'react';
-import Home from './src/screens/Home/Home';
-import {NavigationContainer} from '@react-navigation/native';
+import {Provider} from 'react-redux';
 import HomeStack from './src/navigation/HomeStack';
+import store, {persistVal} from './src/redux/store';
 import MyStatusBar from './src/Components/MyStatusBar';
+import {PersistGate} from 'redux-persist/integration/react';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
   return (
     <NavigationContainer>
-      <MyStatusBar backgroundColor={'white'} />
-      <HomeStack />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistVal}>
+          <MyStatusBar backgroundColor={'white'} />
+          <HomeStack />
+        </PersistGate>
+      </Provider>
     </NavigationContainer>
   );
 };

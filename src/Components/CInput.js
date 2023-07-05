@@ -8,7 +8,7 @@ const CInput = ({value, onChangeText, placeholder,...props}) => {
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor={'black'}
+      placeholderTextColor={'grey'}
       style={styles.input}
       {...props}
     />
