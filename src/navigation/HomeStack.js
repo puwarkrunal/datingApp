@@ -9,6 +9,7 @@ import OtpScreen from '../screens/Auth/OTP/OtpScreen';
 import LoginWithPhone from '../screens/Auth/LoginWithPhone/LoginWithPhone';
 import ChatScreen from '../screens/Chat/ChatScreen/ChatScreen';
 import AccountSettings from '../screens/Profile/Edit/AccountSettings';
+import ManageSubscription from '../screens/Profile/ManageSubscription/ManageSubscription';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const HomeStack = () => {
       <Stack.Screen name="Tabs" component={BottomTab} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="AccountSettings" component={AccountSettings} />
+      <Stack.Screen name="ManageSubscription" component={ManageSubscription} />
     </Stack.Navigator>
   );
 };

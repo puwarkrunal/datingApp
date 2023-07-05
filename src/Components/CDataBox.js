@@ -1,12 +1,19 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
-const CDataBox = ({label, value}) => {
+const CDataBox = ({label, value, isClickable, onPress}) => {
   return (
-    <View style={styles.box}>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      disabled={!isClickable}
+      onPress={onPress}
+      style={styles.box}>
       <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>{value}</Text>
-    </View>
+      <Text
+        style={[styles.value, {color: isClickable ? '#247DCF' : '#8E8E8E'}]}>
+        {value}
+      </Text>
+    </TouchableOpacity>
   );
 };
 

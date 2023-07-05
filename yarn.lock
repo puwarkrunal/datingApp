@@ -2368,6 +2368,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/analytics@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "@react-native-firebase/analytics@npm:18.1.0"
+  peerDependencies:
+    "@react-native-firebase/app": 18.1.0
+  checksum: 4b39edcb867de6feabd7f098c8b4b466683b871778df447987085c6494ed4fefa05b25a2582861bcc5c91b620ae143e2bbbe276db4b1d43cbf3fc14605e9db81
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/app@npm:^18.1.0":
   version: 18.1.0
   resolution: "@react-native-firebase/app@npm:18.1.0"
@@ -2406,6 +2415,15 @@ __metadata:
   peerDependencies:
     "@react-native-firebase/app": 18.1.0
   checksum: 9c88419deae179f7ddd7fb6eebbf11903f8c2560a91c8fda3fa7c5e8f44f047e84e35e6f34d142e9d1f03be2d3bdba6c318f322841f2a6969a12a69449871fda
+  languageName: node
+  linkType: hard
+
+"@react-native-firebase/storage@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "@react-native-firebase/storage@npm:18.1.0"
+  peerDependencies:
+    "@react-native-firebase/app": 18.1.0
+  checksum: 65a6a04931b2d2b522f8727b183a96c96978e9d2caf91448a7368a07d8a7d42e0907bc0e87ad1d77a6f21a7e6833e6e818cdfb6ea8fdff84b7fff407edde326b
   languageName: node
   linkType: hard
 
@@ -3115,9 +3133,11 @@ __metadata:
     "@babel/runtime": ^7.20.0
     "@react-native-async-storage/async-storage": ^1.19.0
     "@react-native-community/slider": ^4.4.2
+    "@react-native-firebase/analytics": ^18.1.0
     "@react-native-firebase/app": ^18.1.0
     "@react-native-firebase/auth": ^18.1.0
     "@react-native-firebase/firestore": ^18.1.0
+    "@react-native-firebase/storage": ^18.1.0
     "@react-native/eslint-config": ^0.72.2
     "@react-native/metro-config": ^0.72.6
     "@react-navigation/bottom-tabs": ^6.5.8

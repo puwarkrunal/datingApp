@@ -9,6 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {logo} from '../../assets/images';
 import auth from '@react-native-firebase/auth';
+import analytics from '@react-native-firebase/analytics';
 
 const Splash = () => {
   const navigation = useNavigation();
@@ -23,8 +24,13 @@ const Splash = () => {
     };
   });
 
-  function onAuthStateChanged(user) {
+  async function onAuthStateChanged(user) {
     if (user) {
+      console.log(user);
+      await analytics().logEvent('openApp', {
+        id: user.uid,
+        number: user.phoneNumber,
+      });
       navigation.navigate('Tabs');
     } else navigation.navigate('Login');
   }

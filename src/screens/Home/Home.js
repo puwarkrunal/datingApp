@@ -25,10 +25,14 @@ const Home = () => {
   const [listUser, setListUser] = useState([]);
   const [filterModal, setFilterModal] = useState(false);
   const [removedUserData, setRemovedUserData] = useState([]);
+  const rdx = useSelector(state => state.user.data);
 
   useEffect(() => {
     const getAllUsers = async () => {
-      let list = await firestore().collection('users').get();
+      let list = await firestore()
+        .collection('users')
+        .where('email', '!=', rdx.email)
+        .get();
       let allUser = [];
       list.docs.map(item => {
         allUser.push(item.data());
@@ -37,8 +41,6 @@ const Home = () => {
     };
     getAllUsers();
   }, []);
-
-  const rdx = useSelector(state => state.user.data);
 
   const swipe = useRef(new Animated.ValueXY()).current;
   const rotate = useRef(new Animated.Value(0)).current;

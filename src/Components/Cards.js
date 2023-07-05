@@ -74,7 +74,7 @@ const Cards = ({item, isFirst, swipe, ...rest}) => {
       ]}
       {...rest}>
       <Image
-        source={{uri: item.image}}
+        source={{uri: item.imageURL}}
         style={{
           width: '100%',
           height: '100%',
