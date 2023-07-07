@@ -1,17 +1,17 @@
 import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
   Text,
-  TextInput,
   View,
+  Alert,
+  TextInput,
+  StyleSheet,
+  SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import CBack from '../../../Components/CBack';
 import CButton from '../../../Components/CButton';
 import {useNavigation} from '@react-navigation/native';
-import {horizontalScale, moderateScale, verticalScale} from '../../../helper';
 import firestore from '@react-native-firebase/firestore';
+import {horizontalScale, moderateScale, verticalScale} from '../../../helper';
 
 const LoginWithPhone = () => {
   const navigation = useNavigation();
@@ -64,6 +64,7 @@ const LoginWithPhone = () => {
           maxLength={10}
           onChangeText={txt => setNumber(txt)}
           placeholderTextColor={'black'}
+          keyboardType="number-pad"
         />
       </View>
 
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
     fontSize: moderateScale(18),
     textAlignVertical: 'center',
+    color: 'black',
   },
   mainInput: {
     width: '60%',
@@ -127,5 +129,6 @@ const styles = StyleSheet.create({
     height: verticalScale(50),
     fontSize: moderateScale(18),
     letterSpacing: moderateScale(2),
+    color: 'black',
   },
 });

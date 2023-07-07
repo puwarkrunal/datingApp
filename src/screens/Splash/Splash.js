@@ -26,7 +26,6 @@ const Splash = () => {
 
   async function onAuthStateChanged(user) {
     if (user) {
-      console.log(user);
       await analytics().logEvent('openApp', {
         id: user.uid,
         number: user.phoneNumber,

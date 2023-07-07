@@ -23,24 +23,65 @@ const Home = () => {
   const [val, setVal] = useState(0);
   const [age, setAge] = useState(0);
   const [listUser, setListUser] = useState([]);
-  const [filterModal, setFilterModal] = useState(false);
-  const [removedUserData, setRemovedUserData] = useState([]);
   const rdx = useSelector(state => state.user.data);
+  const [filterModal, setFilterModal] = useState(false);
+  const [existUser, setExistUser] = useState([]);
 
   useEffect(() => {
-    const getAllUsers = async () => {
-      let list = await firestore()
-        .collection('users')
-        .where('email', '!=', rdx.email)
-        .get();
-      let allUser = [];
-      list.docs.map(item => {
-        allUser.push(item.data());
-      });
-      setListUser(allUser);
+    const getLikeDisLikeData = async () => {
+      firestore()
+        .collection('LikeDislike')
+        .doc('AllList')
+        .collection(rdx.uid)
+        .get()
+        .then(querySnapshot => {
+          let list = [];
+          querySnapshot.forEach(doc => {
+            list.push(doc.data());
+          });
+          setExistUser(list.map(i => i.uid));
+        })
+        .catch(error => {
+          console.error('Error getting collection:', error);
+        });
     };
-    getAllUsers();
+
+    getLikeDisLikeData();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = getAllUsers();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [existUser, rdx?.email]);
+
+  const getAllUsers = useCallback(() => {
+    try {
+      const query = firestore()
+        .collection('users')
+        .where('email', '!=', rdx.email);
+
+      const unsubscribe = query.onSnapshot(snapshot => {
+        let allUser = [];
+        snapshot.forEach(doc => {
+          allUser.push(doc.data());
+        });
+
+        const filteredArray = allUser.filter(
+          obj => existUser.length === 0 || !existUser.includes(obj.uid),
+        );
+
+        setListUser(filteredArray);
+      });
+
+      // Return the unsubscribe function to stop listening for updates
+      return unsubscribe;
+    } catch (error) {
+      console.error('Error retrieving users:', error);
+    }
+  }, [existUser, rdx?.email]);
 
   const swipe = useRef(new Animated.ValueXY()).current;
   const rotate = useRef(new Animated.Value(0)).current;
@@ -73,20 +114,37 @@ const Home = () => {
   const removeCard = useCallback(
     direction => {
       let likeStatus =
-        direction == 1 ? 'Like' : direction == -1 ? 'Reject' : null;
+        direction == 1 ? 'Like' : direction == -1 ? 'DisLike' : null;
       setListUser(prevState => {
         const removedUser = prevState[0];
         removedUser.likeStatus = likeStatus;
-        setRemovedUserData(prevRemovedUserData => [
-          ...prevRemovedUserData,
-          removedUser,
-        ]);
+        callStoreAction(removedUser);
         return prevState.slice(1);
       });
       swipe.setValue({x: 0, y: 0});
     },
     [swipe],
   );
+
+  const callStoreAction = data => {
+    firestore()
+      .collection('LikeDislike')
+      .doc('AllList')
+      .collection(rdx.uid)
+      .doc(data.uid)
+      .set(data)
+      .then(() => console.log('User Swipe Data added successfully'));
+    {
+      data.likeStatus == 'Like' &&
+        firestore()
+          .collection('Request')
+          .doc('AllRequest')
+          .collection(data.uid)
+          .doc(rdx.uid)
+          .set(rdx)
+          .then(() => console.log('User Request sent successfully'));
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>

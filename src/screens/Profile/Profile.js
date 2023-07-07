@@ -2,10 +2,11 @@ import {
   View,
   Text,
   Image,
+  Modal,
   StyleSheet,
+  ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import React, {useState} from 'react';
 import CBack from '../../Components/CBack';
@@ -16,16 +17,41 @@ import {useDispatch, useSelector} from 'react-redux';
 import storage from '@react-native-firebase/storage';
 import {useNavigation} from '@react-navigation/native';
 import {setUserData} from '../../redux/slices/UserSlice';
+import firestore from '@react-native-firebase/firestore';
 import ImagePicker from 'react-native-image-crop-picker';
 import {horizontalScale, moderateScale} from '../../helper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import firestore from '@react-native-firebase/firestore';
+import {defaultImg} from '../../helper/DummyData';
+import moment from 'moment';
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const userData = useSelector(state => state.user.data);
   const [profileImg, setProfileImg] = useState('');
+  const userData = useSelector(state => state.user.data);
+  console.log(userData, 'userData');
+  const [showLangModal, setShowLangModal] = useState(false);
+
+  function calculateAge(birthDate) {
+    const today = moment();
+    const birth = moment(birthDate, 'DD-MM-YYYY');
+
+    const age = today.diff(birth, 'years');
+
+    return age;
+  }
+
+  const languages = [
+    {name: 'English', code: 'en'},
+    {name: 'Spanish', code: 'es'},
+    {name: 'French', code: 'fr'},
+    {name: 'German', code: 'de'},
+    {name: 'Italian', code: 'it'},
+    {name: 'Japanese', code: 'ja'},
+    {name: 'Korean', code: 'ko'},
+    {name: 'Portuguese', code: 'pt'},
+    {name: 'Russian', code: 'ru'},
+  ];
 
   const accountSettingsData = [
     {
@@ -97,17 +123,19 @@ const Profile = () => {
           <CBack title={'Profile'} />
           <View style={{alignItems: 'center', justifyContent: 'center'}}>
             <View style={styles.profile}>
-              {profileImg && (
-                <Image
-                  source={{uri: profileImg}}
-                  style={{height: '100%', width: '100%', borderRadius: 75}}
-                />
-              )}
+              <Image
+                source={{
+                  uri: userData?.imageURL ? userData?.imageURL : defaultImg,
+                }}
+                style={{height: '100%', width: '100%', borderRadius: 75}}
+              />
               <TouchableOpacity style={styles.floatEdit} onPress={onSelect}>
                 <AntDesign name="edit" size={20} />
               </TouchableOpacity>
             </View>
-            <Text style={styles.nameAgeTxt}>Jenny, 22</Text>
+            <Text style={styles.nameAgeTxt}>
+              {userData.name}, {calculateAge(userData.DOB)}
+            </Text>
           </View>
         </View>
 
@@ -145,13 +173,38 @@ const Profile = () => {
 
           <Text style={styles.txtHead}>Discovery Settings</Text>
           <CDataBox label={'Location'} value={'My Current Location'} />
-          <CDataBox label={'Preferred Languages'} value={'English'} />
+          <CDataBox
+            label={'Preferred Languages'}
+            value={'English'}
+            isClickable={true}
+            onPress={() => setShowLangModal(true)}
+          />
           <CDataBox label={'Show Me'} value={'Men'} />
           <CDataBox label={'Location'} value={'My Current Location'} />
 
           <CButton name={'Logout'} onPress={onLogout} />
         </View>
       </ScrollView>
+
+      <Modal visible={showLangModal} transparent>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.txtHead}>Language</Text>
+            {languages.map((lan, e) => {
+              return (
+                <Text key={e} style={styles.txt}>
+                  {lan.name}
+                </Text>
+              );
+            })}
+            <TouchableOpacity
+              style={styles.floatBtn}
+              onPress={() => setShowLangModal(false)}>
+              <AntDesign name="close" size={18} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -199,5 +252,41 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     marginVertical: 12,
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalView: {
+    height: '80%',
+    width: '80%',
+    borderRadius: 9,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
+    padding: 12,
+  },
+  txt: {
+    fontSize: 18,
+    color: 'black',
+    marginVertical: 12,
+  },
+  floatBtn: {
+    position: 'absolute',
+    right: -10,
+    top: -10,
+    height: 30,
+    width: 30,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
   },
 });

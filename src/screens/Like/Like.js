@@ -1,52 +1,106 @@
 import {
-  FlatList,
-  Modal,
-  SafeAreaView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  Image,
+  Modal,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import {useSelector} from 'react-redux';
 import CBack from '../../Components/CBack';
+import React, {useEffect, useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import {moderateScale, verticalScale} from '../../helper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const Like = () => {
-  const data = Array(6).fill('');
-  const [priceModal, setPriceModal] = useState(true);
+  const [LikeList, setLikeList] = useState([]);
+  const rdx = useSelector(state => state.user.data);
+  const [priceModal, setPriceModal] = useState(false);
 
-  const renderCard = () => {
-    return <View style={styles.card}></View>;
+  useEffect(() => {
+    firestore()
+      .collection('Request')
+      .doc('AllRequest')
+      .collection(rdx.uid)
+      .get()
+      .then(querySnapshot => {
+        let list = [];
+        querySnapshot.forEach(doc => {
+          list.push(doc.data());
+        });
+        setLikeList(list);
+      })
+      .catch(error => {
+        console.error('Error getting collection:', error);
+      });
+  }, []);
+
+  const renderCard = ({item, index}) => {
+    return (
+      <View key={index} style={styles.card}>
+        <Image
+          source={{uri: item.imageURL}}
+          style={{resizeMode: 'stretch', height: '100%', width: '100%'}}
+        />
+        <View
+          style={{
+            bottom: 0,
+            width: '100%',
+            position: 'absolute',
+            backgroundColor: 'rgba(255,255,255,.3)',
+          }}>
+          <Text style={{textAlign: 'center'}}>{item.name}</Text>
+        </View>
+      </View>
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <CBack title={'Likes'} />
 
-      <View style={styles.mainContainer}>
-        <Text style={styles.headingText}>7 Likes</Text>
-        <FlatList
-          data={data}
-          numColumns={2}
-          renderItem={renderCard}
-          keyExtractor={(_, index) => index}
-          showsVerticalScrollIndicator={false}
-          columnWrapperStyle={{justifyContent: 'space-evenly'}}
-        />
-      </View>
+      {LikeList.length === 0 ? (
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <Text>You Don't Have Any Likes Right Now</Text>
+        </View>
+      ) : (
+        <>
+          <View style={styles.mainContainer}>
+            <Text style={styles.headingText}>{LikeList.length} Likes</Text>
+            <FlatList
+              data={LikeList}
+              numColumns={2}
+              renderItem={renderCard}
+              keyExtractor={(_, index) => index}
+              showsVerticalScrollIndicator={false}
+              columnWrapperStyle={{justifyContent: 'space-between'}}
+            />
+          </View>
 
-      <TouchableOpacity style={styles.btn}>
-        <Text>SEE WHO LIKES YOU</Text>
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => setPriceModal(true)}>
+            <Text>SEE WHO LIKES YOU</Text>
+          </TouchableOpacity>
+        </>
+      )}
 
       <Modal visible={priceModal} transparent>
         <View style={styles.modalContainer}>
           <View style={styles.div}>
             <Text style={styles.title}>Get Mingle Gold</Text>
             <View style={styles.circle}>
-              <AntDesign name={'heart'} />
+              <AntDesign name={'heart'} size={24} color="white" />
             </View>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.floatBtn}
+              onPress={() => setPriceModal(false)}>
+              <AntDesign name="close" size={18} color="black" />
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -116,6 +170,23 @@ const styles = StyleSheet.create({
     width: 57,
     borderRadius: 28,
     backgroundColor: '#B44CF4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  floatBtn: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
     alignItems: 'center',
     justifyContent: 'center',
   },

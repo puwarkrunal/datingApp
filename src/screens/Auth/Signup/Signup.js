@@ -45,6 +45,7 @@ const Signup = () => {
       phone: phone,
       gender: gender,
       DOB: DOB,
+      plan: 'basic',
     };
 
     navigation.navigate('Otp', {data: data, screen: 'signup'});

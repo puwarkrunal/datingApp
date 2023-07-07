@@ -39,9 +39,8 @@ const ManageSubscription = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <CBack title={'Manage Subscription'} />
       <ScrollView contentContainerStyle={{paddingBottom: 18}}>
-        <CBack title={'Manage Subscription'} />
-
         <View style={styles.card}>
           <View style={styles.txtContainer}>
             <Text style={{fontSize: 18, color: 'black', fontWeight: 'bold'}}>
@@ -118,6 +117,7 @@ const ManageSubscription = () => {
               .map((i, e) => {
                 return (
                   <View
+                    key={e}
                     style={{
                       height: 10,
                       width: 10,

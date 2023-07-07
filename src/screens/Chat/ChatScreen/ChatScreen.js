@@ -87,6 +87,7 @@ const ChatScreen = () => {
             value={messageText}
             style={styles.input}
             multiline
+            placeholderTextColor={'black'}
             placeholder="Type Something....."
             onChangeText={txt => setMessageText(txt)}
           />
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     padding: 12,
     textAlignVertical: 'center',
+    color: 'black',
   },
   bottomContainer: {
     flexDirection: 'row',
