@@ -1,35 +1,71 @@
 import {
   Text,
   View,
+  Image,
+  FlatList,
+  TextInput,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  Image,
-  TextInput,
-  FlatList,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import moment from 'moment';
+import {useSelector} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const ChatScreen = () => {
   const route = useRoute();
   const {data} = route.params;
   const navigation = useNavigation();
+  const [msgArray, setMsgArray] = useState([]);
+  const rdx = useSelector(state => state.user.data);
   const [messageText, setMessageText] = useState('');
 
-  const chatData = [
-    {
-      id: 1,
-      message: 'Can I follow you? Cause my mom told me to follow my dreams...',
-      senderId: 345678900,
-    },
-    {
-      id: 2,
-      message: "I'm not a hoarder but I really Loream ipls",
-      senderId: data.userId,
-    },
-  ];
+  useEffect(() => {
+    const msgRef = firestore()
+      .collection('chatRoom')
+      .doc(rdx.uid)
+      .collection(data.uid)
+      .orderBy('createdAt', 'desc');
+
+    msgRef.onSnapshot(snapshot => {
+      let allUser = [];
+      snapshot.forEach(doc => {
+        allUser.push(doc.data());
+      });
+
+      setMsgArray(allUser);
+    });
+  }, []);
+
+  const onSend = () => {
+    const uniqId = Math.random().toString().substr(2, 10);
+    const createdAt = new Date();
+    const msgArray = {
+      messageId: uniqId,
+      senderId: rdx.uid,
+      receverId: data.uid,
+      message: messageText,
+      senderImg: rdx.imageURL,
+      senderName: rdx.name,
+      createdAt: createdAt,
+    };
+
+    firestore()
+      .collection('chatRoom')
+      .doc(rdx.uid)
+      .collection(data.uid)
+      .add(msgArray);
+
+    firestore()
+      .collection('chatRoom')
+      .doc(data.uid)
+      .collection(rdx.uid)
+      .add(msgArray);
+    setMessageText('');
+  };
 
   const onBackPress = () => {
     navigation.goBack();
@@ -39,23 +75,29 @@ const ChatScreen = () => {
     return (
       <View style={{margin: 13}} key={index}>
         <View
-          style={{
-            padding: 12,
-            height: 'auto',
-            maxWidth: '80%',
-            minWidth: '20%',
-            borderRadius: 20,
-            backgroundColor:
-              item.senderId == data.userId ? '#F1F1F1' : '#AA3FEC',
-            alignSelf: item.senderId == data.userId ? 'flex-start' : 'flex-end',
-          }}>
+          style={[
+            styles.msgBox,
+            {
+              backgroundColor:
+                item.senderId == data.uid ? '#F1F1F1' : '#AA3FEC',
+              alignSelf: item.senderId == data.uid ? 'flex-start' : 'flex-end',
+            },
+          ]}>
           <Text
             style={{
-              color: item.senderId == data.userId ? 'black' : 'white',
+              color: item.senderId == data.uid ? 'black' : 'white',
             }}>
             {item.message}
           </Text>
         </View>
+        <Text
+          style={{
+            color: 'black',
+            margin: 6,
+            alignSelf: item.senderId == data.uid ? 'flex-start' : 'flex-end',
+          }}>
+          {moment(item.createdAt).format('LT')}
+        </Text>
       </View>
     );
   };
@@ -74,7 +116,7 @@ const ChatScreen = () => {
       </View>
 
       <FlatList
-        data={chatData}
+        data={msgArray}
         inverted={true}
         renderItem={renderCard}
         style={{height: '80%'}}
@@ -92,7 +134,7 @@ const ChatScreen = () => {
             onChangeText={txt => setMessageText(txt)}
           />
         </View>
-        <TouchableOpacity style={styles.sendBtn}>
+        <TouchableOpacity style={styles.sendBtn} onPress={onSend}>
           <AntDesign name={'right'} size={24} color={'black'} />
         </TouchableOpacity>
       </View>
@@ -128,11 +170,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   input: {
-    width: '100%',
+    width: '80%',
+    alignSelf: 'center',
     minHeight: 50,
     maxHeight: 100,
-    height: 'auto',
-    padding: 12,
+    borderWidth: 1,
     textAlignVertical: 'center',
     color: 'black',
   },
@@ -157,5 +199,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#F1F1F1',
+  },
+  msgBox: {
+    padding: 12,
+    height: 'auto',
+    maxWidth: '80%',
+    minWidth: '20%',
+    borderRadius: 20,
   },
 });

@@ -1,19 +1,49 @@
 import {
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  Image,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import CBack from '../../Components/CBack';
 import {c1, c2, c3, c4} from '../../assets/images';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import {useSelector} from 'react-redux';
 
 const Chat = () => {
   const navigation = useNavigation();
+  const rdx = useSelector(state => state.user.data);
+  const [userList, setUserList] = useState([]);
+
+  useEffect(() => {
+    const getList = async () => {
+      firestore()
+        .collection('FriendList')
+        .doc(rdx.uid)
+        .collection('Friends')
+        .get()
+        .then(querySnapshot => {
+          const friendsList = [];
+          querySnapshot.forEach(doc => {
+            const friendData = doc.data();
+            friendsList.push(friendData);
+          });
+          // Use the friendsList array containing all the friend data
+          // console.log(friendsList);
+          setUserList(friendsList);
+          // Perform further actions with the retrieved data
+        })
+        .catch(error => {
+          console.error('Error getting friend list:', error);
+        });
+    };
+    getList();
+  }, []);
+
   const dummyData = [
     {
       id: 1,
@@ -56,7 +86,15 @@ const Chat = () => {
         style={styles.card}
         onPress={() => navigation.navigate('ChatScreen', {data: item})}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Image source={item.image} />
+          <Image
+            source={{uri: item.imageURL}}
+            style={{
+              height: 60,
+              width: 60,
+              borderRadius: 30,
+              resizeMode: 'stretch',
+            }}
+          />
 
           <View style={{marginLeft: 12}}>
             <Text style={{fontSize: 18, color: 'black', fontWeight: 'bold'}}>
@@ -76,7 +114,7 @@ const Chat = () => {
       <CBack title={'Chat'} />
 
       <FlatList
-        data={dummyData}
+        data={userList}
         renderItem={renderCard}
         keyExtractor={(_, index) => index}
       />

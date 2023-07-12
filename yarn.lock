@@ -2418,6 +2418,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-firebase/messaging@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "@react-native-firebase/messaging@npm:18.1.0"
+  peerDependencies:
+    "@react-native-firebase/app": 18.1.0
+  checksum: 86183cc6be249550e237cfb949c1ac1ac69405e1b6bbabc0a2d459b7013e55013204cbeca45cbbd6688a5e9d88a6b02e2255d19503a6c029c21f99fc910af86e
+  languageName: node
+  linkType: hard
+
 "@react-native-firebase/storage@npm:^18.1.0":
   version: 18.1.0
   resolution: "@react-native-firebase/storage@npm:18.1.0"
@@ -3137,6 +3146,7 @@ __metadata:
     "@react-native-firebase/app": ^18.1.0
     "@react-native-firebase/auth": ^18.1.0
     "@react-native-firebase/firestore": ^18.1.0
+    "@react-native-firebase/messaging": ^18.1.0
     "@react-native-firebase/storage": ^18.1.0
     "@react-native/eslint-config": ^0.72.2
     "@react-native/metro-config": ^0.72.6
@@ -3150,6 +3160,7 @@ __metadata:
     "@types/react-test-renderer": ^18.0.0
     add: ^2.0.6
     babel-jest: ^29.2.1
+    deprecated-react-native-prop-types: ^4.1.0
     eslint: ^8.19.0
     jest: ^29.2.1
     metro-react-native-babel-preset: 0.76.5
@@ -3158,6 +3169,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.72.0
     react-native-animatable: ^1.3.3
+    react-native-blur: ^3.2.2
     react-native-date-picker: ^4.2.13
     react-native-gesture-handler: ^2.12.0
     react-native-image-crop-picker: ^0.40.0
@@ -4232,7 +4244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deprecated-react-native-prop-types@npm:4.1.0":
+"deprecated-react-native-prop-types@npm:4.1.0, deprecated-react-native-prop-types@npm:^4.1.0":
   version: 4.1.0
   resolution: "deprecated-react-native-prop-types@npm:4.1.0"
   dependencies:
@@ -8352,7 +8364,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:*, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:*, prop-types@npm:^15.5.10, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -8458,6 +8470,15 @@ __metadata:
   dependencies:
     prop-types: ^15.7.2
   checksum: eb35821de36ae4eb00f97d99fc22ed79bd017248092ff1299f9d46a7ab946de16d2e6d6bfbf4cab5ef77d0d3bf47684aec761a7670ec7d36aae8d77ab8ddd171
+  languageName: node
+  linkType: hard
+
+"react-native-blur@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "react-native-blur@npm:3.2.2"
+  dependencies:
+    prop-types: ^15.5.10
+  checksum: 385c1f6e831d4ae0421fd339fdc75eabd1ce4fc217b8b9da92193bffbaa9a5b7a0d0d2afb6b58959803f6149b367a0bf7a6347b0d665cd46ff354d33c76559b2
   languageName: node
   linkType: hard
 

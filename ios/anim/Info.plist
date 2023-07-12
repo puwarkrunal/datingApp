@@ -20,12 +20,6 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need access for image picker</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Need access for image picker</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Need access for image picker</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -54,8 +48,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Need access for image picker</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Need access for image picker</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need access for image picker</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -74,6 +74,11 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

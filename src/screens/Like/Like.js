@@ -7,13 +7,19 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Dimensions,
+  Alert,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import CBack from '../../Components/CBack';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {moderateScale, verticalScale} from '../../helper';
+import {horizontalScale, moderateScale, verticalScale} from '../../helper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import LinearGradient from 'react-native-linear-gradient';
+import {BlurView} from 'react-native-blur';
+
+const {height, width} = Dimensions.get('window');
 
 const Like = () => {
   const [LikeList, setLikeList] = useState([]);
@@ -38,9 +44,85 @@ const Like = () => {
       });
   }, []);
 
+  const sendNotifications = async (token, id) => {
+    var NotiFicationData = JSON.stringify({
+      notification: {
+        body: '',
+        title: '',
+      },
+      data: {
+        messageId: id,
+      },
+      to: token,
+    });
+
+    axios
+      .post('https://fcm.googleapis.com/fcm/send', NotiFicationData, {
+        headers: {
+          Authorization:
+            'Bearer AAAASpCPkvc:APA91bHZZS1VlSVNORS_wQpDJ6uDGCjKSKwmYaED7tCys09FU-vsYkmHHRf92nxcJxN24OfqsQqR0rK6l2fMTUCZy6wox-_ulSemyQXj6QAI_gCdMr7TDCaEQz2K2t3bLmoJiSXyALhl',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(function (res) {
+        console.log(JSON.stringify(res.data), 'Notification Data:');
+      })
+      .catch(function (err) {
+        console.log(err, 'errrr');
+      });
+  };
+
+  const onAccept = async item => {
+    await firestore()
+      .collection('Request')
+      .doc('AllRequest')
+      .collection(rdx.uid)
+      .doc(item.uid)
+      .update({status: 'Accepted'})
+      .then(() => console.log('Data Updated SuccessFully'));
+
+    await firestore()
+      .collection('FriendList')
+      .doc(rdx.uid)
+      .collection('Friends')
+      .doc(item.uid)
+      .set(item)
+      .then(() => console.log('Added To Friend List'));
+
+    await firestore()
+      .collection('FriendList')
+      .doc(item.uid)
+      .collection('Friends')
+      .doc(rdx.uid)
+      .set(rdx)
+      .then(() => console.log('Added To Friend List'));
+  };
+  const onReject = i => {};
+
+  const onCardPress = item => {
+    Alert.alert(
+      `Mingle Request`,
+      `Do You want to accept request of ${item.name}`,
+      [
+        {
+          text: 'Reject',
+          style: 'cancel',
+          onPress: () => onReject(item),
+        },
+        {
+          text: 'Accept',
+          onPress: () => onAccept(item),
+        },
+      ],
+    );
+  };
+
   const renderCard = ({item, index}) => {
     return (
-      <View key={index} style={styles.card}>
+      <TouchableOpacity
+        key={index}
+        style={styles.card}
+        onPress={() => onCardPress(item)}>
         <Image
           source={{uri: item.imageURL}}
           style={{resizeMode: 'stretch', height: '100%', width: '100%'}}
@@ -54,7 +136,7 @@ const Like = () => {
           }}>
           <Text style={{textAlign: 'center'}}>{item.name}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -127,10 +209,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   card: {
-    width: 150,
-    margin: 12,
-    height: 200,
-    backgroundColor: 'black',
+    width: horizontalScale(150),
+    margin: moderateScale(12),
+    height: verticalScale(200),
   },
   btn: {
     width: '80%',

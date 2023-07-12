@@ -6,12 +6,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import LinearGradient from 'react-native-linear-gradient';
+import React from 'react';
 import {logo} from '../../../assets/images';
 import CButton from '../../../Components/CButton';
 import {useNavigation} from '@react-navigation/native';
-import auth from '@react-native-firebase/auth';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -27,23 +26,16 @@ const Login = () => {
         </View>
 
         <View style={styles.secContainer}>
-          <View>
-            <Text style={styles.txt}>
-              By clicking Log In, you agree with our Terms. Learn how we process
-              your data in our Privacy Policy and Cookies Policy.
-            </Text>
+          <Text style={styles.txt}>
+            By clicking Log In, you agree with our Terms. Learn how we process
+            your data in our Privacy Policy and Cookies Policy.
+          </Text>
 
-            <CButton name={'Login With GOOGLE'} iconName={'google'} />
-            <CButton
-              name={'Login With Facebook'}
-              iconName={'facebook-square'}
-            />
-            <CButton
-              name={'Login With Phone'}
-              iconName={'phone'}
-              onPress={() => navigation.navigate('LoginWithPhone')}
-            />
-          </View>
+          <CButton
+            name={'Login With Phone'}
+            iconName={'phone'}
+            onPress={() => navigation.navigate('LoginWithPhone')}
+          />
 
           <View style={{alignSelf: 'center', flexDirection: 'row'}}>
             <Text style={{color: 'white'}}>Don't have account? </Text>

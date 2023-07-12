@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CBack from '../../../Components/CBack';
 import CInput from '../../../Components/CInput';
 import CButton from '../../../Components/CButton';
@@ -15,8 +15,7 @@ import {facebookLogo, googleLogo} from '../../../assets/images';
 import {horizontalScale, moderateScale, verticalScale} from '../../../helper';
 import CDropdown from '../../../Components/CDropdown';
 import CDatePicker from '../../../Components/CDatePicker';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 
 const Signup = () => {
   const navigation = useNavigation();
@@ -25,6 +24,21 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [DOB, setDOB] = useState('');
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const registerForRemoteMessages = async () => {
+      try {
+        // await messaging().registerDeviceForRemoteMessages();
+        const token = await messaging().getToken();
+        console.log('FCM Token:', token);
+      } catch (error) {
+        console.error('Error registering device for remote messages:', error);
+      }
+    };
+
+    registerForRemoteMessages();
+  }, []);
 
   const genderList = ['Male', 'Female', 'other'];
 

@@ -2,20 +2,22 @@ import {
   Text,
   View,
   Modal,
+  Platform,
   Animated,
   StyleSheet,
   Dimensions,
   PanResponder,
   SafeAreaView,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import Cards from '../../Components/Cards';
-import auth from '@react-native-firebase/auth';
 import Slider from '@react-native-community/slider';
 import firestore from '@react-native-firebase/firestore';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {sorryImg} from '../../assets/images';
 
 const {height, width} = Dimensions.get('window');
 
@@ -50,11 +52,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = getAllUsers();
-
-    return () => {
-      unsubscribe();
-    };
+    getAllUsers();
   }, [existUser, rdx?.email]);
 
   const getAllUsers = useCallback(() => {
@@ -127,6 +125,8 @@ const Home = () => {
   );
 
   const callStoreAction = data => {
+    let ReqData = rdx;
+    ReqData.status = 'Pending';
     firestore()
       .collection('LikeDislike')
       .doc('AllList')
@@ -141,7 +141,7 @@ const Home = () => {
           .doc('AllRequest')
           .collection(data.uid)
           .doc(rdx.uid)
-          .set(rdx)
+          .set(ReqData)
           .then(() => console.log('User Request sent successfully'));
     }
   };
@@ -173,6 +173,22 @@ const Home = () => {
         })
         .reverse()}
 
+      {listUser.length === 0 && (
+        <View style={styles.emptyCard}>
+          <Image
+            source={sorryImg}
+            style={{
+              alignSelf: 'center',
+              height: '80%',
+              width: '100%',
+              resizeMode: 'contain',
+            }}
+          />
+          <Text style={{textAlign: 'center'}}>You have reach the limit</Text>
+          <Text style={{textAlign: 'center'}}>try Again Later</Text>
+        </View>
+      )}
+
       <View
         style={{
           width: '100%',
@@ -182,6 +198,7 @@ const Home = () => {
           flexDirection: 'row',
           justifyContent: 'space-evenly',
           alignItems: 'center',
+          display: listUser.length === 0 ? 'none' : 'flex',
         }}>
         <TouchableOpacity
           style={{
@@ -292,5 +309,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  emptyCard: {
+    borderRadius: 12,
+    width: width - 20,
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    height: Platform.OS == 'ios' ? height - 300 : height - 280,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
   },
 });
